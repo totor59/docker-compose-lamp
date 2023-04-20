@@ -9,7 +9,7 @@ services:
       - mariadb
     restart: 'always'
     ports:
-      - '8080:80'
+      - 8080:80
     links:
       - mariadb
     volumes:
@@ -22,7 +22,7 @@ services:
     image: "mariadb:${MARIADB_VERSION}"
     restart: 'always'
     volumes: 
-#      - "./mariadb/data:${MARIADB_DATA_DIR}"
+      - ./mariadb/data:/var/lib/mysql
 #      - "./mariadb/logs:${MARIADB_LOG_DIR}"
       - ./mariadb/conf:/etc/mysql
     environment:
@@ -30,6 +30,24 @@ services:
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
       MYSQL_USER: "${MYSQL_USER}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    networks:
+      network:
+        ipv4_address: 172.19.0.3
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: lamp-pma
+    links:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      network:
+        ipv4_address: 172.19.0.4
 
 networks:
   network:
