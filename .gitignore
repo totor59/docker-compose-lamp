@@ -1,1 +1,3 @@
 lamp.env
+app/*
+mariadb/*

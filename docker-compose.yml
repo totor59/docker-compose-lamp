@@ -2,7 +2,8 @@ version: "3"
 
 services:
   web:
-    image: "apache:${PHP_VERSION}"
+    container_name: "lamp-apache"
+    image: "php:${PHP_VERSION}-apache"
     restart: 'always'
     depends_on:
       - mariadb
@@ -11,12 +12,15 @@ services:
       - '8080:80'
     links:
       - mariadb
+    volumes:
+      - ./app:/var/www/html
   mariadb:
+    container_name: "lamp-mariadb"
     image: "mariadb:${MARIADB_VERSION}"
     restart: 'always'
     volumes: 
-      - "./mariadb/data:${MARIADB_DATA_DIR}"
-      - "./mariadb/logs:${MARIADB_LOG_DIR}"
+#      - "./mariadb/data:${MARIADB_DATA_DIR}"
+#      - "./mariadb/logs:${MARIADB_LOG_DIR}"
       - ./mariadb/conf:/etc/mysql
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
